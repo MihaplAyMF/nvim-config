@@ -2,6 +2,8 @@
 vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
 
 vim.g.mapleader = " "
+vim.o.foldmethod = 'indent'
+vim.api.nvim_set_keymap('n', 'gd', ':lua vim.lsp.buf.definition()<CR>', { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap('v', '<Tab>', '>gv', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('v', '<S-Tab>', '<gv', { noremap = true, silent = true })
@@ -93,7 +95,7 @@ vim.api.nvim_create_user_command('Run', function()
     local exec_path = build_dir .. "/build/" .. game_name
 
     if vim.fn.filereadable(exec_path) == 1 then
-        vim.fn.system(exec_path)
+        vim.fn.system("cd " .. build_dir .. "/build && ./" .. game_name)
         print("✅ Game " .. game_name .. " run!")
     else
         print("❌ Executable file " .. exec_path .. " not found!")
