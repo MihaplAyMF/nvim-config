@@ -2,7 +2,6 @@
 vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
 
 vim.g.mapleader = " "
-vim.o.foldmethod = 'indent'
 vim.api.nvim_set_keymap('n', 'gd', ':lua vim.lsp.buf.definition()<CR>', { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap('v', '<Tab>', '>gv', { noremap = true, silent = true })
@@ -56,19 +55,19 @@ end
 
 function GetGameNameFromCmake()
   local cmake_file = vim.fn.getcwd() .. "/CMakeLists.txt"
-  local game_name = ""
+  local project_name = ""
 
   if vim.fn.filereadable(cmake_file) == 1 then
     local cmake_content = vim.fn.readfile(cmake_file)
     for _, line in ipairs(cmake_content) do
       if line:match("project%s*%((%w+)%)") then
-        game_name = line:match("project%s*%((%w+)%)")
+        project_name = line:match("project%s*%((%w+)%)")
         break
       end
     end
   end
 
-  return game_name
+  return project_name
 end
 
 vim.api.nvim_create_user_command('Run', function()
@@ -78,26 +77,15 @@ vim.api.nvim_create_user_command('Run', function()
         return
     end
 
-    local cmake_file = build_dir .. "/CMakeLists.txt"
-    local game_name = ""
-
-    if vim.fn.filereadable(cmake_file) == 1 then
-        local cmake_content = vim.fn.readfile(cmake_file)
-
-        for _, line in ipairs(cmake_content) do
-            if line:match("project%s*%((%w+)%)") then
-                game_name = line:match("project%s*%((%w+)%)")
-                break
-            end
-        end
-    end
-
-    local exec_path = build_dir .. "/build/" .. game_name
+    local nvim_paths_file = build_dir .. "/.nvim_paths"
+    local paths = vim.fn.readfile(nvim_paths_file)[1]
+    local exec_path = build_dir .. paths
 
     if vim.fn.filereadable(exec_path) == 1 then
-        vim.fn.system("cd " .. build_dir .. "/build && ./" .. game_name)
-        print("✅ Game " .. game_name .. " run!")
+        vim.fn.system("cd " .. exec_path .. " && ./" .. exec_path)
+        print("✅ Project run!")
     else
         print("❌ Executable file " .. exec_path .. " not found!")
     end
+
 end, {})
