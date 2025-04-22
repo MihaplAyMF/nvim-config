@@ -78,14 +78,15 @@ vim.api.nvim_create_user_command('Run', function()
     end
 
     local nvim_paths_file = build_dir .. "/.nvim_paths"
-    local paths = vim.fn.readfile(nvim_paths_file)[1]
-    local exec_path = build_dir .. paths
+    local paths = vim.fn.readfile(nvim_paths_file)
+    local exec_path = paths[1]
+    local project_name = paths[2]
 
-    if vim.fn.filereadable(exec_path) == 1 then
-        vim.fn.system("cd " .. exec_path .. " && ./" .. exec_path)
+    if vim.fn.filereadable(exec_path .. project_name) == 1 then
+        vim.fn.system("cd " .. exec_path .. " && ./" .. project_name)
         print("✅ Project run!")
     else
-        print("❌ Executable file " .. exec_path .. " not found!")
+        print("❌ Executable file " .. exec_path .. project_name .. " not found!")
     end
 
 end, {})
