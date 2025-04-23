@@ -1,7 +1,7 @@
 
 vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
 
-vim.g.mapleader = " "
+vim.g.mapleader = "/"
 vim.api.nvim_set_keymap('n', 'gd', ':lua vim.lsp.buf.definition()<CR>', { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap('v', '<Tab>', '>gv', { noremap = true, silent = true })
@@ -34,7 +34,7 @@ dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")
 
 require "options"
-require "nvchad.autocmds"
+require "configs.dap"
 
 vim.schedule(function()
   require "mappings"
@@ -51,23 +51,6 @@ local build_dir = cwd:match("^(.*)/src") or cwd:match("^(.*)/src/.*")
 
 if build_dir then
     vim.cmd("set makeprg=cmake\\ --build\\ " .. build_dir .. "/build")
-end
-
-function GetGameNameFromCmake()
-  local cmake_file = vim.fn.getcwd() .. "/CMakeLists.txt"
-  local project_name = ""
-
-  if vim.fn.filereadable(cmake_file) == 1 then
-    local cmake_content = vim.fn.readfile(cmake_file)
-    for _, line in ipairs(cmake_content) do
-      if line:match("project%s*%((%w+)%)") then
-        project_name = line:match("project%s*%((%w+)%)")
-        break
-      end
-    end
-  end
-
-  return project_name
 end
 
 vim.api.nvim_create_user_command('Run', function()

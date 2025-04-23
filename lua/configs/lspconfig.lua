@@ -5,14 +5,16 @@ local nvlsp = require "nvchad.configs.lspconfig"
 
 local servers = { "html", "cssls", "clangd" }
 
-local file_dir = vim.fn.expand('%:p:h')
-local project_root = file_dir:match("^(.*)/src/Code$")
+-- Определяем путь к compile_commands.json
+local file_dir = vim.fn.expand('%:p:h')  -- Получаем директорию открытого файла
+local project_root = file_dir:match("^(.*)/src/Code$")  -- Ищем корень проекта
 
 local compile_commands_path = nil
 if project_root and vim.fn.isdirectory(project_root .. "/src") == 1 then
     compile_commands_path = project_root .. "/build"
 end
 
+-- Настройки clangd
 local clangd_opts = {
     cmd = {
         "clangd",
@@ -24,7 +26,7 @@ local clangd_opts = {
                 Remove = { "-I/usr/include" },
             },
             PathExclude = {
-                ".*%.inl$"
+                ".*%.inl$" 
             },
         },
         fallbackFlags = { "-std=c++17" },
