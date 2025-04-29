@@ -1,7 +1,7 @@
 
 vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
 
-vim.g.mapleader = "/"
+vim.g.mapleader = " "
 vim.api.nvim_set_keymap('n', 'gd', ':lua vim.lsp.buf.definition()<CR>', { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap('v', '<Tab>', '>gv', { noremap = true, silent = true })
@@ -34,6 +34,7 @@ dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")
 
 require "options"
+require "nvchad.autocmds"
 require "configs.dap"
 
 vim.schedule(function()
